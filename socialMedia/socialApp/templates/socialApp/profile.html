@@ -1,0 +1,164 @@
+{% extends 'main.html' %}
+{% block content %}
+
+<h1>
+    {% if profile.imageUrl != "" %}
+    <img src="{{profile.imageUrl}}" height="100" width="100" style="border-radius: 50%;">
+    {% else %}
+    <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="100" width="100" style="border-radius: 50%;">
+    {% endif %}
+    {{profile}}
+</h1>
+{% if profile not in user.friends.all and user.profile != profile %}
+<a class="btn btn-primary mb-3" href="{% url 'add_friend' profile.user.username %}">Add Friend
+    <img height="30" width="30"  src="https://cdn.iconscout.com/icon/premium/png-256-thumb/add-friend-2-486306.png">    
+</a>
+<h2>You must add this user to your friend list before you can view profile information</h2>
+{% else %}
+{% if user.profile != profile %}
+<a class="btn btn-primary mb-3" href="{% url 'remove_friend' profile.user.username %}">Unfriend
+    <img height="25" width="25"  src="https://icon-library.com/images/unfriend-icon/unfriend-icon-10.jpg">
+</a>
+{% endif %}
+{% if user.profile == profile %}
+<a class="btn btn-primary mb-3" href="{% url 'edit_profile' profile.user.username %}">Edit Info
+    <img height="20" width="20" style="border-radius: 50%;" src="https://icon-library.com/images/setting-icon/setting-icon-2.jpg">
+</a>
+<a class="btn btn-danger mb-3" href="{% url 'remove_user' user.username %}">Delete
+    <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+</a>
+<a class="btn btn-primary mb-3" href="{% url 'add_post' %}"> New Post
+    <img height="20" width="20" src="https://e7.pngegg.com/pngimages/461/1024/png-clipart-computer-icons-editing-edit-icon-cdr-angle-thumbnail.png" >
+</a>
+{% endif %}
+
+<h2>About:</h2>
+<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
+    <h3 style="border-bottom:1px solid">City: {{profile.city}}</h3>
+
+    <h3 style="border-bottom:1px solid">Date Of Birth: {{profile.dob|date:'d-m-Y'}}</h3>
+    {% if profile.relationship %}
+    <h3>Relationship: In relationship </h3>
+    {% else %}
+    <h3>Relationship: Single </h3>
+    {% endif %}
+</div>
+
+<div class="card" style="position: absolute;top: 22%;left: 65%; width: 17%; height: 30%;">
+    <div class="card-header text-white bg-primary">
+        <h2>Friends: {{friends.count}}</h2>
+    </div>
+    <div style="overflow-y: scroll;" class="card-body">
+        {% for friend in friends %}
+        <a style="border-bottom:1px solid" class="nav-link" href="{% url 'profile' friend.user.username %}">
+            {% if friend.imageUrl != "" %}
+            <img src="{{friend.imageUrl}}" height="30" width="30" style="border-radius: 50%;">
+            {% else %}
+            <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="30" width="30" style="border-radius: 50%;">
+            {% endif %}
+            <h5 style="display: inline">{{friend}}</h5>
+        </a>
+        <br>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card" style="position: absolute;top: 62%;left: 65%; width: 17%; height: 30%;">
+    <div class="card-header text-white bg-primary">
+        <h2>Groups: {{groups.count}}</h2>
+    </div>
+    <div style="overflow-y: scroll;" class="card-body">
+        {% for group in groups %}
+        <a style="border-bottom:1px solid" class="nav-link" href="{% url 'group' group.id %}"><h5>{{group}}</h5></a>
+        {% endfor %}
+    </div>
+</div>
+
+<br>
+{% if posts.count != 0 %}
+<h2>Posts: {{posts.count}}</h2>
+{% else %}
+<h2>There is no posts yet</h2>
+{% endif %}
+
+{% for post in context %}
+<div class="card text-dark bg-light mb-3" style="width: 45rem;">
+    <div class="card-header">
+
+        <div class="row" style="width: 65rem;">
+            <div class="col align-self-start">
+                {% if post.userPost.imageUrl != "" %}
+                <img src="{{post.userPost.imageUrl}}" height="50" width="50" style="border-radius: 50%;">
+                {% else %}
+                <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="50" width="50" style="border-radius: 50%;">
+                {% endif %}
+                <a href="{% url 'profile' post.userPost.user.username %}"><h5 style="display: inline">{{post.userPost}}</h5></a>
+            </div>
+            
+            {% if post.userPost == user.profile %}
+            <div class="col align-self-end">
+                <a class="btn btn-success mb-2" href="{% url 'edit_post' post.id %}">Edit
+                    <img height="20" width="20" style="border-radius: 50%;" src="https://icon-library.com/images/setting-icon/setting-icon-2.jpg">
+                </a>
+                <a class="btn btn-success mb-2" href="{% url 'remove_post' post.id %}">Delete
+                    <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if post.group != null %}
+        <a href="{% url 'group' post.group.id %}">Group: {{post.group}}</a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        <p class="card-text">{{post.body|linebreaks}}</p>
+        {% if post.imageUrl != "" %}
+        <img src="{{post.imageUrl}}" height="250" width="300">
+        {% endif %}
+        <p class="card-text"><small class="text-muted">{{post.created}}</small></p>
+
+       
+        
+        {% if user.profile in post.likes.all %}
+        <a class="btn btn-danger" href="{% url 'remove_like' post.id %}">
+            <img height="25" width="25" style="border-radius: 50%" src="https://e7.pngegg.com/pngimages/173/210/png-clipart-facebook-f8-facebook-like-button-facebook-inc-facebook-facebook-like-blue-angle-thumbnail.png">
+            Unlike</a>
+        {% else %}
+        <a class="btn btn-primary" href="{% url 'add_like' post.id %}">
+            <img height="25" width="25" style="border-radius: 50%" src="https://e7.pngegg.com/pngimages/173/210/png-clipart-facebook-f8-facebook-like-button-facebook-inc-facebook-facebook-like-blue-angle-thumbnail.png">
+            Like</a>
+        {% endif %}
+
+
+        <p class="card-text"><small style="color: royalblue;">likes: {{post.likes.all.count}} comments: {{post.comment.all.count}}</small></p>       
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <form class="row g-3" action="{% url 'add_comment' post.id %}" method="post">
+                {% csrf_token %}
+                <div class="col-auto">
+                  <textarea style="width: 600px; height: 50px;" class="form-control" name="body" placeholder="Add Comment..."></textarea>
+                </div>
+                <div class="col-auto">
+                  <input type="submit" value="Send" class="btn btn-primary mb-3">
+                </div>
+              </form>
+              <a href="{% url 'post' post.id %}">show all comments</a>
+        </div>
+    </div>
+</div>
+<br>
+{% endfor %}
+
+{% if posts.count != 0 %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% for i in page_object.page_range %}
+        <li class="page-item"><a class="page-link" href="{% url 'profile' profile.user.username %}?p={{i}}">{{i}}</a></li>
+      {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endif %}
+{% endblock %}

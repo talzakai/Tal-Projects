@@ -1,0 +1,35 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('',views.landing,name="landing"),
+    path('login/',views.login_user,name="login"),
+    path('logout/',views.logout_user,name="logout"),
+    path('signup/',views.signup_user,name="signup"),
+    path('feed/',views.home,name="home"),
+    path('profile/<str:username>/',views.profile,name="profile"),
+    path('profile/<str:username>/edit/',views.edit_profile,name="edit_profile"),
+    path('profile/<str:username>/remove/',views.remove_user,name="remove_user"),
+    path('profile/<str:username>/add friend/',views.add_friend,name="add_friend"),
+    path('profile/<str:username>/remove friend/',views.remove_friend,name="remove_friend"),
+    path('group/add/',views.add_group,name="add_group"),
+    path('group/<str:id>/',views.group,name="group"),
+    path('group/<str:id>/edit/',views.edit_group,name="edit_group"),
+    path('group/<str:id>/remove/',views.remove_group,name="remove_group"),
+    path('group/<str:id>/join/',views.join_group,name="join_group"),
+    path('group/<str:id>/leave/',views.leave_group,name="leave_group"),
+    path('group/<str:id>/kick/<str:username>/',views.kick_group,name="kick_group"),
+    path('group/<str:id>/add post/',views.add_post_group,name="add_post_group"),
+    path('group/<str:id>/remove post/',views.remove_post_group,name="remove_post_group"),
+    path('group/<str:id>/remove comment/',views.remove_comment_group,name="remove_comment_group"),
+    path('post/add/',views.add_post,name="add_post"),
+    path('post/<str:id>/',views.post,name="post"),
+    path('post/<str:id>/add like/',views.add_like,name="add_like"),
+    path('post/<str:id>/remove like/',views.remove_like,name="remove_like"),
+    path('post/<str:id>/edit/',views.edit_post,name="edit_post"),
+    path('post/<str:id>/remove/',views.remove_post,name="remove_post"),
+    path('post/<str:id>/add comment/',views.add_comment,name="add_comment"),
+    path('comment/<str:id>/edit',views.edit_comment,name="edit_comment"),
+    path('comment/<str:id>/remove',views.remove_comment,name="remove_comment"),
+    path('search/',views.search,name="search")
+]

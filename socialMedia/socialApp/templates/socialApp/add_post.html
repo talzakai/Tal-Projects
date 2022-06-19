@@ -1,0 +1,17 @@
+{%extends 'main.html'%}
+{%block content%}
+<br>
+<h1>New Post</h1>
+<br>
+<form action="" method="post">
+    {%csrf_token%}
+    <div class="mb-3">
+        <textarea style="width: 600px; height: 200px;" class="form-control" name="body" placeholder="What are u thinking..."></textarea>
+    </div>
+    <div class="mb-3">
+        <input style="width: 600px; height: 50px;" type="text" class="form-control" name="imageUrl" placeholder="imageUrl">
+    </div>
+    <input type="submit" value="Post" class="btn btn-primary" />
+</form>
+
+{%endblock%}

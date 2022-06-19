@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="card text-white bg-danger mb-3">
+    <div class="card-header">Do you wish to delete this {{group}}?</div>
+    <div class="card-body">
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger active" value="Yes">
+            <a href="{% url 'group' group.id %}" class="btn">No</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

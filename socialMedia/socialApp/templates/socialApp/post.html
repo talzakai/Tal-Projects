@@ -1,0 +1,123 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<br>
+<div class="card text-dark bg-light mb-3" style="width: 45rem;">
+  <div class="card-header">
+      <div class="row" style="width: 65rem;">
+          <div class="col align-self-start">
+              {% if post.userPost.imageUrl != "" %}
+              <img src="{{post.userPost.imageUrl}}" height="50" width="50" style="border-radius: 50%;">
+              {% else %}
+              <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="50" width="50" style="border-radius: 50%;">
+              {% endif %}
+              <a href="{% url 'profile' post.userPost.user.username %}"><h5 style="display: inline">{{post.userPost}}</h5></a>
+          </div>
+          
+          {% if post.userPost == user.profile %}
+          <div class="col align-self-end">
+              <a class="btn btn-success mb-2" href="{% url 'edit_post' post.id %}">Edit
+                  <img height="20" width="20" style="border-radius: 50%;" src="https://icon-library.com/images/setting-icon/setting-icon-2.jpg">
+              </a>
+              <a class="btn btn-success mb-2" href="{% url 'remove_post' post.id %}">Delete
+                  <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+              </a>
+          </div>
+          {% elif post.group.owner == user.profile %}
+          <div class="col align-self-end">
+              <a class="btn btn-success mb-2" href="{% url 'remove_post_group' post.id %}">Delete
+                  <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+              </a>
+          </div>
+          {% endif %}
+      </div>
+
+      {% if post.group != null %}
+      <a href="{% url 'group' post.group.id %}">Group: {{post.group}}</a>
+      {% endif %}
+  </div>
+
+  <div class="card-body">
+      <p class="card-text">{{post.body|linebreaks}}</p>
+      {% if post.imageUrl != "" %}
+      <img src="{{post.imageUrl}}" height="250" width="300">
+      {% endif %}
+      <p class="card-text"><small class="text-muted">{{post.created}}</small></p>
+      
+      {% if user.profile in post.likes.all %}
+      <a class="btn btn-danger" href="{% url 'remove_like' post.id %}">
+          <img height="25" width="25" style="border-radius: 50%" src="https://e7.pngegg.com/pngimages/173/210/png-clipart-facebook-f8-facebook-like-button-facebook-inc-facebook-facebook-like-blue-angle-thumbnail.png">
+          Unlike</a>
+      {% else %}
+      <a class="btn btn-primary" href="{% url 'add_like' post.id %}">
+          <img height="25" width="25" style="border-radius: 50%" src="https://e7.pngegg.com/pngimages/173/210/png-clipart-facebook-f8-facebook-like-button-facebook-inc-facebook-facebook-like-blue-angle-thumbnail.png">
+          Like</a>
+      {% endif %}
+
+      <p class="card-text"><small style="color: royalblue;">likes: {{post.likes.all.count}} comments: {{post.comment.all.count}}</small></p>       
+  </div>
+</div>
+
+<div class="card text-dark bg-light mb-3" style="width: 45rem;">
+  <div class="card">
+    <div class="card-body">
+        <form class="row g-3" action="{% url 'add_comment' post.id %}" method="post">
+            {% csrf_token %}
+            <div class="col-auto">
+              <textarea style="width: 600px; height: 50px;" class="form-control" name="body" placeholder="Add Comment..."></textarea>
+            </div>
+            <div class="col-auto">
+              <input type="submit" value="Send" class="btn btn-primary mb-3">
+            </div>
+          </form>
+    </div>
+  </div>
+  {% for comment in context %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row" style="width: 65rem;">
+        <div class="col align-self-start">
+          {% if comment.userComment.imageUrl != "" %}
+          <img src="{{comment.userComment.imageUrl}}" height="50" width="50" style="border-radius: 50%;">
+          {% else %}
+          <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="50" width="50" style="border-radius: 50%;">
+          {% endif %}
+          <a href="{% url 'profile' comment.userComment.user.username %}"><h5 style="display: inline">{{comment.userComment}}</h5></a>
+        </div>
+        {% if user.profile == comment.userComment or user.profile == post.userPost or user.profile == post.group.owner %}
+        <div class="col align-self-end">
+          {% if comment.userComment == user.profile %}
+          <a class="btn btn-success mb-2" href="{% url 'edit_comment' comment.id %}">Edit
+            <img height="20" width="20" style="border-radius: 50%;" src="https://icon-library.com/images/setting-icon/setting-icon-2.jpg">
+          </a>
+          {% endif %}
+          {% if comment.post.group.owner == user.profile %}
+            <a class="btn btn-success mb-2" href="{% url 'remove_comment_group' comment.id %}">Delete
+                <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+            </a>
+          {% else %}
+          <a class="btn btn-success mb-2" href="{% url 'remove_comment' comment.id %}">Delete
+            <img height="20" width="20" style="border-radius: 20%;" src="https://toppng.com/uploads/preview/recycling-bin-vector-delete-icon-png-black-11563002079w1isxqyyiv.png">
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body">
+      <p>{{comment.body|linebreaks}}</p>
+      <small class="text-muted">{{comment.created}}</small>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<br>
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% for i in page_object.page_range %}
+      <li class="page-item"><a class="page-link" href="{% url 'post' post.id %}?p={{i}}">{{i}}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endblock %}

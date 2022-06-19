@@ -1,0 +1,58 @@
+{% extends 'main.html'%}
+{%block content%}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+{% if form.errors %}
+<div class="alert alert-danger" role="alert">{{form.errors}}</div>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <h1>Signup</h1>
+    <br/>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="username" placeholder="User name">
+        <small class="text-muted">{{form.username.help_text}}</small>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password1" placeholder="Password">
+        <small class="text-muted">{{form.password1.help_text}}</small>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password2" placeholder="Confirm Password">
+        <small class="text-muted">{{form.password2.help_text}}</small>
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="firstName" placeholder="First Name">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="city" placeholder="City">
+    </div>
+    <div class="mb-3">
+        <input type="date" class="form-control" name="dob">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" name="imageUrl" placeholder="Image Url">
+    </div>
+
+    <label class="form-label">In a relationship?</label>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="relationship" id="yes" value="True">
+        <label class="form-check-label" for="yes">
+          Yes
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="relationship" id="no" value="False">
+        <label class="form-check-label" for="no">
+          No
+        </label>
+    </div>
+    <input type="submit" value="Signup" class="btn btn-primary">
+</form>
+{%endblock%}

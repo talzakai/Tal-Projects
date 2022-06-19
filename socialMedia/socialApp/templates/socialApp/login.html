@@ -1,0 +1,24 @@
+{%extends 'main.html'%}
+{%block content%}
+<br>
+<h1>Login</h1>
+<br>
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+<form action="" method="post">
+    {%csrf_token%}
+    <div class="mb-3">
+        <input style="width: 600px; height: 50px;" type="text" class="form-control" name="username" placeholder="Username">
+    </div>
+    <div class="mb-3">
+        <input style="width: 600px; height: 50px;" type="password" class="form-control" name="password" placeholder="Password">
+    </div>
+    <input type="submit" value="Login" class="btn btn-primary" />
+</form>
+<br>
+<img src="https://netstorage-sportsbrief.akamaized.net/images/8ff64044cc42a6d4.jpg?imwidth=900" alt="mip" height="400" width="600">
+<h2>Login here</h2>
+{%endblock%}

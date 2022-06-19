@@ -1,0 +1,76 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Search Results</h1>
+<h6 class="text-muted">Profiles found: {{profiles.count}}</h6>
+<h6 class="text-muted">Groups found: {{groups.count}}</h6>
+<h6 class="text-muted">Posts found: {{posts.count}}</h6>
+
+<ul class="list-group list-group-flush" style="max-width: 36rem;">
+  {% if profiles.count != 0 %}
+  <br>
+  <h4>Profiles:</h4>
+  {% endif %}
+  {% for profile in profiles %}
+  <a style="text-decoration: none;" href="{% url 'profile' profile.user.username %}">
+    <li class="list-group-item">
+      {% if profile.imageUrl != "" %}
+      <img src="{{profile.imageUrl}}" height="30" width="30" style="border-radius: 50%;">
+      {% else %}
+      <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="30" width="30" style="border-radius: 50%;">
+      {% endif %}
+      {{profile}}
+    </li>
+  </a>
+  {% endfor %}
+
+  {% if groups.count != 0 %}
+  <br>
+  <h4>Groups:</h4>
+  {% endif %}
+  {% for group in groups %}
+  <a style="text-decoration: none;" href="{% url 'group' group.id %}">
+    <li class="list-group-item">
+      {{group}}
+    </li>
+  </a>
+  {% endfor %}
+
+  {% if posts.count != 0 %}
+  <br>
+  <h4>Posts:</h4>
+  {% endif %}
+    {% for post in posts %}
+    <a style="text-decoration: none; color: black;" href="{% url 'post' post.id %}">
+      <div class="card text-dark bg-light mb-3" style="max-width: 36rem;">
+        <div class="card-header">
+            <div class="row" style="width: 65rem;">
+                <div class="col align-self-start">
+                    {% if post.userPost.imageUrl != "" %}
+                    <img src="{{post.userPost.imageUrl}}" height="50" width="50" style="border-radius: 50%;">
+                    {% else %}
+                    <img src="https://riab.org.uk/wp-content/uploads/2020/12/blank-profile-face.jpg" height="50" width="50" style="border-radius: 50%;">
+                    {% endif %}
+                    <h5 style="display: inline">{{post.userPost}}</h5>
+                </div>
+            </div>
+            {% if post.group != null %}
+            Group: {{post.group}}
+            {% endif %}
+        </div>
+      
+        <div class="card-body">
+            <p class="card-text">{{post.body|truncatechars:100}}</p>
+            {% if post.imageUrl != "" %}
+            <img src="{{post.imageUrl}}" height="250" width="300">
+            {% endif %}
+            <p class="card-text"><small class="text-muted">{{post.created}}</small></p>
+      
+            <p class="card-text"><small style="color: royalblue;">likes: {{post.likes.all.count}} comments: {{post.comment.all.count}}</small></p>       
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+</ul>
+
+{% endblock %}
